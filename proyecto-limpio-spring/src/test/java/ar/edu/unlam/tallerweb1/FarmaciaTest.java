@@ -1,5 +1,10 @@
 package ar.edu.unlam.tallerweb1;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,6 +99,20 @@ public class FarmaciaTest extends SpringTest {
 		getSession().save(farm4);
 		
 		assertThat(getSession().get(Farmacia.class, farm.getId())).isNotNull();
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(false)
+	public void testBuscarFarmaciasTurnoMartes()
+	{
+		List<Farmacia> farmacia;
+		farmacia = getSession().createCriteria(Farmacia.class)
+								.add(Restrictions.eq("diaDeTurno", "Martes"))
+								.list();
+		
+		assertThat(farmacia).hasSize(3);
+		
 	}
 
 }
