@@ -98,7 +98,6 @@ public class FarmaciaTest extends SpringTest {
 		
 		getSession().save(farm4);
 		
-		assertThat(getSession().get(Farmacia.class, farm.getId())).isNotNull();
 	}
 	
 	@Test
