@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unlam.tallerweb1.modelo.Barrio;
 import ar.edu.unlam.tallerweb1.modelo.Direccion;
 import ar.edu.unlam.tallerweb1.modelo.Farmacia;
+import junit.framework.Assert;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,7 +48,7 @@ public class FarmaciaTest extends SpringTest {
 		Farmacia farm2 = new Farmacia();
 		
 		dir2.setCalle("General Hornos");
-		dir2.setCalle("1100");
+		dir2.setNumero("1100");
 		bar2.setNombre("Caseros");
 		dir2.setBarrio(bar2);
 		
@@ -65,7 +67,7 @@ public class FarmaciaTest extends SpringTest {
 		Farmacia farm3 = new Farmacia();
 		
 		dir3.setCalle("Beiro");
-		dir3.setCalle("1200");
+		dir3.setNumero("1200");
 		bar3.setNombre("Devoto");
 		dir3.setBarrio(bar3);
 		
@@ -84,7 +86,7 @@ public class FarmaciaTest extends SpringTest {
 		Farmacia farm4 = new Farmacia();
 		
 		dir4.setCalle("Beiro");
-		dir4.setCalle("1200");
+		dir4.setNumero("1200");
 		bar4.setNombre("Devoto");
 		dir4.setBarrio(bar4);
 		
@@ -100,6 +102,7 @@ public class FarmaciaTest extends SpringTest {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	@Transactional
 	@Rollback(false)
@@ -113,5 +116,20 @@ public class FarmaciaTest extends SpringTest {
 		assertThat(farmacia).hasSize(3);
 		
 	}
+	
+	@Test
+	@Transactional
+	@Rollback(false)
+	public void testQueBuscaLasFarmaciasDeUnaCalle()
+	{
+		List<Farmacia> farmacias;
+		farmacias = getSession().createCriteria(Farmacia.class)
+					.createAlias("direccion","dirAlias")
+					.add(Restrictions.eq("dirAlias.calle","Beiro"))
+					.list();
+		assertThat(farmacias).hasSize(2);
+	}
+	
+
 
 }
